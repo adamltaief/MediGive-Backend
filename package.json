@@ -1,0 +1,16 @@
+{
+  "name": "medigive-monorepo",
+  "version": "1.0.0",
+  "description": "MediGive Monorepo - Frontend & Backend",
+  "private": true,
+  "scripts": {
+    "install-all": "npm install --prefix backend && npm install --prefix frontend",
+    "server": "npm run dev --prefix backend",
+    "client": "npm start --prefix frontend",
+    "seed-admin": "node backend/seedAdmin.js",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  }
+}
