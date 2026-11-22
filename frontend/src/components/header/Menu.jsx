@@ -6,13 +6,26 @@ function Menu() {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
-  const userInfo = JSON.parse(localStorage.getItem("userInfo") || "null");
+  const handleAuthProtectedClick = (e, targetPath) => {
+    e.preventDefault();
+    const token = localStorage.getItem("token") || JSON.parse(localStorage.getItem("userInfo") || "null")?.token;
+
+    if (!token) {
+      navigate("/se-connecter");
+    } else {
+      navigate(targetPath);
+    }
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("userInfo");
+    localStorage.removeItem("token");
     navigate("/");
     window.location.reload();
   };
+
+  const isLoggedIn = !!(localStorage.getItem("token") || JSON.parse(localStorage.getItem("userInfo") || "null"));
+  const userInfo = JSON.parse(localStorage.getItem("userInfo") || "null");
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-slate-900/95 backdrop-blur-md shadow-md border-b border-slate-800 text-white">
@@ -32,10 +45,28 @@ function Menu() {
           {/* Desktop Navigation Links */}
           <nav className="hidden xl:flex items-center space-x-6 text-sm font-medium">
             <Link to="/" className="hover:text-emerald-400 transition-colors">Accueil</Link>
-            <Link to="/faire-don" className="hover:text-emerald-400 transition-colors">Faire un don</Link>
+            
+            {/* Protected: Faire un don */}
+            <button
+              type="button"
+              onClick={(e) => handleAuthProtectedClick(e, "/faire-don")}
+              className="hover:text-emerald-400 transition-colors bg-transparent border-0 p-0 text-sm font-medium text-white cursor-pointer"
+            >
+              Faire un don
+            </button>
+
             <Link to="/liste-besoins" className="hover:text-emerald-400 transition-colors">Besoins</Link>
             <Link to="/listedisponibles" className="hover:text-emerald-400 transition-colors">Disponibles</Link>
-            <Link to="/demande-aide" className="hover:text-emerald-400 transition-colors">Demander l'aide</Link>
+
+            {/* Protected: Demander l'aide */}
+            <button
+              type="button"
+              onClick={(e) => handleAuthProtectedClick(e, "/demande-aide")}
+              className="hover:text-emerald-400 transition-colors bg-transparent border-0 p-0 text-sm font-medium text-white cursor-pointer"
+            >
+              Demander l'aide
+            </button>
+
             {userInfo?.isAdmin && (
               <Link to="/admin-dashboard" className="text-emerald-400 font-bold hover:text-emerald-300 transition-colors">Admin Dashboard</Link>
             )}
@@ -43,14 +74,14 @@ function Menu() {
 
           {/* Right CTA Actions or User Avatar */}
           <div className="hidden md:flex items-center space-x-4">
-            {userInfo ? (
+            {isLoggedIn ? (
               <div className="flex items-center space-x-3">
                 <div className="flex items-center space-x-2 bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700">
                   <div className="w-8 h-8 rounded-full bg-emerald-500 text-slate-950 font-bold flex items-center justify-center text-sm shadow-sm">
-                    {userInfo.nom ? userInfo.nom.charAt(0).toUpperCase() : "U"}
+                    {userInfo?.nom ? userInfo.nom.charAt(0).toUpperCase() : "U"}
                   </div>
                   <span className="text-sm font-medium text-slate-200">
-                    {userInfo.nom || "Utilisateur"}
+                    {userInfo?.nom || "Utilisateur"}
                   </span>
                 </div>
                 <button
@@ -83,8 +114,7 @@ function Menu() {
           <div className="xl:hidden flex items-center">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 focus:outline-none"
-              aria-label="Toggle menu"
+              className="text-slate-300 hover:text-white focus:outline-none p-2"
             >
               <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 {isOpen ? (
@@ -108,13 +138,13 @@ function Menu() {
           >
             Accueil
           </Link>
-          <Link
-            to="/faire-don"
-            onClick={() => setIsOpen(false)}
-            className="block px-3 py-2 rounded-md text-base font-medium hover:bg-slate-800 hover:text-emerald-400"
+          <button
+            type="button"
+            onClick={(e) => { setIsOpen(false); handleAuthProtectedClick(e, "/faire-don"); }}
+            className="w-full text-left block px-3 py-2 rounded-md text-base font-medium hover:bg-slate-800 hover:text-emerald-400 cursor-pointer bg-transparent border-0 text-white"
           >
             Faire un don
-          </Link>
+          </button>
           <Link
             to="/liste-besoins"
             onClick={() => setIsOpen(false)}
@@ -129,13 +159,13 @@ function Menu() {
           >
             Liste des disponibles
           </Link>
-          <Link
-            to="/demande-aide"
-            onClick={() => setIsOpen(false)}
-            className="block px-3 py-2 rounded-md text-base font-medium hover:bg-slate-800 hover:text-emerald-400"
+          <button
+            type="button"
+            onClick={(e) => { setIsOpen(false); handleAuthProtectedClick(e, "/demande-aide"); }}
+            className="w-full text-left block px-3 py-2 rounded-md text-base font-medium hover:bg-slate-800 hover:text-emerald-400 cursor-pointer bg-transparent border-0 text-white"
           >
             Demander l'aide
-          </Link>
+          </button>
           {userInfo?.isAdmin && (
             <Link
               to="/admin-dashboard"
@@ -147,14 +177,14 @@ function Menu() {
           )}
 
           <div className="pt-4 border-t border-slate-800 flex flex-col space-y-2">
-            {userInfo ? (
+            {isLoggedIn ? (
               <div className="flex flex-col space-y-2">
                 <div className="flex items-center space-x-3 px-3 py-2 bg-slate-800 rounded-xl">
                   <div className="w-8 h-8 rounded-full bg-emerald-500 text-slate-950 font-bold flex items-center justify-center text-sm">
-                    {userInfo.nom ? userInfo.nom.charAt(0).toUpperCase() : "U"}
+                    {userInfo?.nom ? userInfo.nom.charAt(0).toUpperCase() : "U"}
                   </div>
                   <span className="text-sm font-medium text-slate-200">
-                    {userInfo.nom || "Utilisateur"}
+                    {userInfo?.nom || "Utilisateur"}
                   </span>
                 </div>
                 <button
