@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import Menu from "../components/header/Menu";
-import signupimage from "../assets/forms/images/donateur.png";
 
 function IncriDonateur() {
   useEffect(() => {
@@ -10,12 +9,6 @@ function IncriDonateur() {
 
   const [nom, setNom] = useState("");
   const [prenom, setPrenom] = useState("");
-  const [sexe, setSexe] = useState("");
-  const [datenaissance, setDatenaissance] = useState("");
-  const [addresse, setAddresse] = useState("");
-  const [ville, setVille] = useState("");
-  const [zip, setZip] = useState("");
-  const [numtlf, setNumtlf] = useState("");
   const [email, setEmail] = useState("");
   const [mot_de_passe, setMotdepasse] = useState("");
 
