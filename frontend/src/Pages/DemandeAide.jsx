@@ -1,26 +1,26 @@
 import React, { useEffect, useState } from "react";
-import { toast, ToastContainer } from "react-toastify";
 import Menu from "../components/header/Menu";
+import { ToastContainer, toast } from "react-toastify";
 
 function DemandeAide() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  const [type, setType] = useState("");
+  const [titre, setTitre] = useState("");
   const [description, setDescription] = useState("");
+  const [ville, setVille] = useState("");
 
-  const formsubmitHandler = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    if (type.trim() === "") {
-      toast.error("Le type est requis");
+    if (!titre.trim() || !description.trim() || !ville.trim()) {
+      toast.error("Veuillez remplir tous les champs obligatoires.");
       return;
     }
-    if (description.trim() === "") {
-      toast.error("La description est requise");
-      return;
-    }
-    toast.success("Votre demande d'aide a été envoyée avec succès !");
+    toast.success("Votre demande d'aide a été soumise avec succès !");
+    setTitre("");
+    setDescription("");
+    setVille("");
   };
 
   return (
@@ -28,54 +28,59 @@ function DemandeAide() {
       <Menu />
       <ToastContainer position="top-right" autoClose={3000} />
 
-      <main className="flex-grow flex items-center justify-center px-4 sm:px-6 lg:px-8">
-        <div className="max-w-xl w-full bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden p-8 sm:p-10">
+      <main className="flex-grow max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <div className="bg-white rounded-2xl p-6 sm:p-10 shadow-sm border border-slate-200">
           <div className="text-center mb-8">
-            <span className="inline-block p-3 rounded-full bg-blue-100 text-blue-600 mb-3">
-              <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-              </svg>
+            <span className="px-3 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 uppercase tracking-wider">
+              Assistance
             </span>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
-              Demande d'Aide Médicale
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-3">
+              Soumettre une Demande d'Aide
             </h1>
-            <p className="text-sm text-slate-500 mt-2">
-              Remplissez les informations ci-dessous pour soumettre votre demande d'aide.
+            <p className="text-sm text-slate-600 mt-1">
+              Décrivez l'équipement ou le traitement dont vous avez besoin en toute confidentialité.
             </p>
           </div>
 
-          <form onSubmit={formsubmitHandler} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">
-                Type d'aide recherchée
-              </label>
+              <label className="block text-sm font-medium text-slate-700 mb-1">Titre de la demande</label>
               <input
                 type="text"
-                className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-sm"
-                placeholder="Ex: Médicament spécifique ou Appareil médical (Fauteuil...)"
-                value={type}
-                onChange={(e) => setType(e.target.value)}
+                placeholder="Ex: Recherche fauteuil roulant"
+                value={titre}
+                onChange={(e) => setTitre(e.target.value)}
+                className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 outline-none text-sm"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">
-                Description détaillée
-              </label>
+              <label className="block text-sm font-medium text-slate-700 mb-1">Ville / Région</label>
+              <input
+                type="text"
+                placeholder="Ex: Tunis, Sousse, Sfax..."
+                value={ville}
+                onChange={(e) => setVille(e.target.value)}
+                className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 outline-none text-sm"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">Description détaillée</label>
               <textarea
-                className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-sm"
-                rows={5}
-                placeholder="Expliquez votre situation médicale et la nécessité de cet équipement ou traitement..."
+                rows={4}
+                placeholder="Précisez vos besoins et votre situation..."
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
+                className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 outline-none text-sm"
               />
             </div>
 
             <button
               type="submit"
-              className="w-full py-3.5 px-6 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-md transition-all transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              className="w-full py-3.5 px-6 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-semibold text-sm shadow-sm transition-all"
             >
-              Envoyer la demande
+              Publier la demande
             </button>
           </form>
         </div>
